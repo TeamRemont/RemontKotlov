@@ -1,4 +1,9 @@
 
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using RemontKotlov.Persistance;
+using System.Reflection;
+
 namespace RemontKotlov
 {
     public class Program
@@ -9,14 +14,20 @@ namespace RemontKotlov
 
             // Add services to the container.
 
+            builder.Services.AddDbContext<ApplicationDbContext>(ops =>
+            {
+                ops.UseNpgsql(builder.Configuration.GetConnectionString("Db"));
+            });
+
+            builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -25,8 +36,9 @@ namespace RemontKotlov
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseStaticFiles();
 
+            app.UseAuthorization();
 
             app.MapControllers();
 
