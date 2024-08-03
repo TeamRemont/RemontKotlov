@@ -2,8 +2,10 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RemontKotlov.Entities;
+using RemontKotlov.Middlewares;
 using RemontKotlov.Persistance;
 using RemontKotlov.Services.TelegramSender;
+using Serilog;
 using System.Reflection;
 using Telegram.Bot;
 
@@ -31,6 +33,12 @@ namespace RemontKotlov
                 return new TelegramBotClient(botToken);
             });
 
+            var logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration)
+                .Enrich.FromLogContext()
+                .CreateLogger();
+            builder.Logging.AddSerilog(logger);
+
             builder.Services.AddControllers();
 
             builder.Services.AddEndpointsApiExplorer();
@@ -43,6 +51,8 @@ namespace RemontKotlov
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<GlobalExceptionHandler>();
 
             app.UseHttpsRedirection();
 
