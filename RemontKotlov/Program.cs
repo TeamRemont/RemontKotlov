@@ -1,8 +1,11 @@
 
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RemontKotlov.Entities;
 using RemontKotlov.Persistance;
+using RemontKotlov.Services.TelegramSender;
 using System.Reflection;
+using Telegram.Bot;
 
 namespace RemontKotlov
 {
@@ -20,6 +23,13 @@ namespace RemontKotlov
             });
 
             builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+            builder.Services.AddScoped<ITelegramSender, TelegramSender>();
+
+            builder.Services.AddSingleton<TelegramBotClient>(provider =>
+            {
+                var botToken = $"7120169951:AAHSC0lVtBJhcePlU9V8Twxw4l7JSOW_ebs";
+                return new TelegramBotClient(botToken);
+            });
 
             builder.Services.AddControllers();
 
