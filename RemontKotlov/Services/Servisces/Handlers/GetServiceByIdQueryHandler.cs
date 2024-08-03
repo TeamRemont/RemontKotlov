@@ -18,7 +18,7 @@ namespace RemontKotlov.Services.Servisces.Handlers
         public async Task<Service> Handle(GetServiceByIdQuery request, CancellationToken cancellationToken)
         {
             return await _context.Services.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken) ??
-                throw new Exception("Not Found");
+                throw new Exception("Service not found");
         }
     }
 }
