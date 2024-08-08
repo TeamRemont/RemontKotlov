@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RemontKotlov.Entities;
 using RemontKotlov.Middlewares;
 using RemontKotlov.Persistance;
+using RemontKotlov.Services.MetaDatas;
 using RemontKotlov.Services.TelegramSender;
 using Serilog;
 using System.Reflection;
@@ -25,6 +26,7 @@ namespace RemontKotlov
             });
 
             builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+            builder.Services.AddScoped<IMetadataService, MetadataService>();
             builder.Services.AddScoped<ITelegramSender, TelegramSender>();
 
             builder.Services.AddSingleton<TelegramBotClient>(provider =>
